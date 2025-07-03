@@ -21,7 +21,7 @@ def home():
     # GENRE LIST
     genre_list = scrape_genre_all()
 
-    # KOMIK GENRE AKTIF - contoh mengambil genre pertama jika ada
+    # KOMIK GENRE AKTIF - mengambil genre pertama jika ada
     if genre_list:
         genre_aktif = genre_list[0]['slug']
         komik_genre_aktif = scrape_genre_page(genre=genre_aktif, page=1)
@@ -41,20 +41,57 @@ def home():
     hot_manhwa = scrape_hot_bge_with_page(tipe="manhwa", page=1)
     hot_manhua = scrape_hot_bge_with_page(tipe="manhua", page=1)
 
-    # RESPONSE
+    # RESPONSE sesuai tampilan.txt
     return jsonify({
-        "menu_utama": menu_utama,
-        "genre": genre_list,
-        "komik_genre_aktif": komik_genre_aktif,
-        "rekomendasi": rekomendasi,
-        "update_baru": {
-            "manga": update_manga,
-            "manhwa": update_manhwa,
-            "manhua": update_manhua
-        },
-        "komik_populer": {
-            "manga": hot_manga,
-            "manhwa": hot_manhwa,
-            "manhua": hot_manhua
+        "home_screen": {
+            "menu_utama": {
+                "title": "📦 MENU UTAMA",
+                "data": menu_utama
+            },
+            "genre": {
+                "title": "🎚️ GENRE",
+                "data": genre_list
+            },
+            "komik_genre_aktif": {
+                "title": "🎞️ KOMIK GENRE AKTIF",
+                "data": komik_genre_aktif
+            },
+            "section_komik": {
+                "title": "📌 SECTION KOMIK",
+                "rekomendasi": {
+                    "title": "📚 Rekomendasi",
+                    "data": rekomendasi
+                }
+            },
+            "update_baru": {
+                "title": "🔥 Update Baru",
+                "manga": {
+                    "title": "📚 Manga",
+                    "data": update_manga
+                },
+                "manhwa": {
+                    "title": "📘 Manhwa",
+                    "data": update_manhwa
+                },
+                "manhua": {
+                    "title": "📗 Manhua",
+                    "data": update_manhua
+                }
+            },
+            "komik_populer": {
+                "title": "🔥 Komik Populer",
+                "manga": {
+                    "title": "📚 Manga",
+                    "data": hot_manga
+                },
+                "manhwa": {
+                    "title": "📘 Manhwa",
+                    "data": hot_manhwa
+                },
+                "manhua": {
+                    "title": "📗 Manhua",
+                    "data": hot_manhua
+                }
+            }
         }
     })
