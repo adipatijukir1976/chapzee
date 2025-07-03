@@ -1,21 +1,15 @@
-from flask import Flask, jsonify
-from daftar import daftar_bp
-from genre import genre_bp
-from hot import hot_bp
-from rekomendasi import rekomendasi_bp
-from update import update_bp
+from flask import Blueprint, jsonify
+from scrape import (
+    scrape_genre_all,
+    scrape_genre_page,
+    scrape_rekomendasi_bge_with_page,
+    scrape_paginated_bge_with_page,
+    scrape_hot_bge_with_page
+)
 
-app = Flask(__name__)
+home_bp = Blueprint("home", __name__)
 
-# Register semua blueprint
-app.register_blueprint(daftar_bp)
-app.register_blueprint(genre_bp)
-app.register_blueprint(hot_bp)
-app.register_blueprint(rekomendasi_bp)
-app.register_blueprint(update_bp)
-
-# HOME ENDPOINT
-@app.route("/home")
+@home_bp.route("/home")
 def home():
     # MENU UTAMA
     menu_utama = [
@@ -25,29 +19,24 @@ def home():
     ]
 
     # GENRE LIST
-    from scrape import scrape_genre_all
     genre_list = scrape_genre_all()
 
     # KOMIK GENRE AKTIF - contoh mengambil genre pertama jika ada
     if genre_list:
-        from scrape import scrape_genre_page
-        genre_aktif = genre_list[0]['slug'] if 'slug' in genre_list[0] else genre_list[0]['title']
+        genre_aktif = genre_list[0]['slug']
         komik_genre_aktif = scrape_genre_page(genre=genre_aktif, page=1)
     else:
         komik_genre_aktif = []
 
     # REKOMENDASI
-    from scrape import scrape_rekomendasi_bge_with_page
     rekomendasi = scrape_rekomendasi_bge_with_page(page=1)
 
     # UPDATE BARU
-    from scrape import scrape_paginated_bge_with_page
     update_manga = scrape_paginated_bge_with_page(tipe="manga", page=1)
     update_manhwa = scrape_paginated_bge_with_page(tipe="manhwa", page=1)
     update_manhua = scrape_paginated_bge_with_page(tipe="manhua", page=1)
 
     # KOMIK POPULER
-    from scrape import scrape_hot_bge_with_page
     hot_manga = scrape_hot_bge_with_page(tipe="manga", page=1)
     hot_manhwa = scrape_hot_bge_with_page(tipe="manhwa", page=1)
     hot_manhua = scrape_hot_bge_with_page(tipe="manhua", page=1)
@@ -69,6 +58,3 @@ def home():
             "manhua": hot_manhua
         }
     })
-
-if __name__ == "__main__":
-    app.run(debug=True)
