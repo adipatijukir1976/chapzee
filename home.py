@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from api.rekomendasi import get_rekomendasi
+from api.rekomendasi import rekomendasi
 from api.update_manga import get_update_manga
 from api.update_manhwa import get_update_manhwa
 from api.update_manhua import get_update_manhua
@@ -117,6 +117,7 @@ def home():
     sections = {
         "Update Terbaru": get_update_manga() + get_update_manhwa() + get_update_manhua(),
         "Komik Populer": get_hot_manga() + get_hot_manhwa() + get_hot_manhua(),
+        "Rekomendasi": rekomendasi(),
         "Manga": get_manga(),
         "Manhwa": get_manhwa(),
         "Manhua": get_manhua(),
