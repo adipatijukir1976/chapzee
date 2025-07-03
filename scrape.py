@@ -70,6 +70,23 @@ def scrape_paginated_bge(url, page):
         "results": parse_bge_list(soup)
     }
 
+
+def scrape_genre_all():
+    html = cached_get("https://api.komiku.org/")
+    if not html:
+        return []
+    soup = BeautifulSoup(html, "html.parser")
+    results = []
+    for option in soup.select('select[name="genre"] option'):
+        slug = option["value"]
+        title = option.get_text(strip=True)
+        if slug and title != "Genre 1":
+            results.append({
+                "title": title,
+                "slug": slug
+            })
+    return results
+
 def scrape_paginated_bge_with_page(tipe="manga", page=1):
     return scrape_paginated_bge(f"https://api.komiku.org/manga/page/{page}/?orderby&tipe={tipe}", page)
 
