@@ -27,54 +27,54 @@ def home():
         komik_genre_aktif = {
             "has_next_page": False,
             "page": 1,
-            "endpoint": genre_aktif
+            "url": genre_aktif
         }
     else:
         komik_genre_aktif = {
             "has_next_page": False,
             "page": 1,
-            "endpoint": None
+            "url": None
         }
 
     # REKOMENDASI
     rekomendasi = {
         "has_next_page": False,
         "page": 1,
-        "endpoint": "rekomendasi"
+        "url": "/rekomendasi"
     }
 
     # UPDATE BARU
     update_manga = {
         "has_next_page": False,
         "page": 1,
-        "endpoint": "manga"
+        "url": "/update/manga"
     }
     update_manhwa = {
         "has_next_page": False,
         "page": 1,
-        "endpoint": "manhwa"
+        "url": "/update/manhwa"
     }
     update_manhua = {
         "has_next_page": False,
         "page": 1,
-        "endpoint": "manhua"
+        "url": "/update/manhua"
     }
 
     # KOMIK POPULER
     hot_manga = {
         "has_next_page": False,
         "page": 1,
-        "endpoint": "manga"
+        "url": "/hot/manga"
     }
     hot_manhwa = {
         "has_next_page": False,
         "page": 1,
-        "endpoint": "manhwa"
+        "url": "/hot/manhwa"
     }
     hot_manhua = {
         "has_next_page": False,
         "page": 1,
-        "endpoint": "manhua"
+        "url": "/hot/manhua"
     }
 
     # RESPONSE sesuai contoh JSON yang diminta
