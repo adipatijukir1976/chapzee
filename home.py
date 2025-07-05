@@ -24,24 +24,60 @@ def home():
     # KOMIK GENRE AKTIF - mengambil genre pertama jika ada
     if genre_list:
         genre_aktif = genre_list[0]['slug']
-        komik_genre_aktif = scrape_genre_page(genre=genre_aktif, page=1)
+        komik_genre_aktif = {
+            "has_next_page": False,
+            "page": 1,
+            "endpoint": genre_aktif
+        }
     else:
-        komik_genre_aktif = []
+        komik_genre_aktif = {
+            "has_next_page": False,
+            "page": 1,
+            "endpoint": None
+        }
 
     # REKOMENDASI
-    rekomendasi = scrape_rekomendasi_bge_with_page(page=1)
+    rekomendasi = {
+        "has_next_page": False,
+        "page": 1,
+        "endpoint": "rekomendasi"
+    }
 
     # UPDATE BARU
-    update_manga = scrape_paginated_bge_with_page(tipe="manga", page=1)
-    update_manhwa = scrape_paginated_bge_with_page(tipe="manhwa", page=1)
-    update_manhua = scrape_paginated_bge_with_page(tipe="manhua", page=1)
+    update_manga = {
+        "has_next_page": False,
+        "page": 1,
+        "endpoint": "manga"
+    }
+    update_manhwa = {
+        "has_next_page": False,
+        "page": 1,
+        "endpoint": "manhwa"
+    }
+    update_manhua = {
+        "has_next_page": False,
+        "page": 1,
+        "endpoint": "manhua"
+    }
 
     # KOMIK POPULER
-    hot_manga = scrape_hot_bge_with_page(tipe="manga", page=1)
-    hot_manhwa = scrape_hot_bge_with_page(tipe="manhwa", page=1)
-    hot_manhua = scrape_hot_bge_with_page(tipe="manhua", page=1)
+    hot_manga = {
+        "has_next_page": False,
+        "page": 1,
+        "endpoint": "manga"
+    }
+    hot_manhwa = {
+        "has_next_page": False,
+        "page": 1,
+        "endpoint": "manhwa"
+    }
+    hot_manhua = {
+        "has_next_page": False,
+        "page": 1,
+        "endpoint": "manhua"
+    }
 
-    # RESPONSE sesuai tampilan.txt
+    # RESPONSE sesuai contoh JSON yang diminta
     return jsonify({
         "home_screen": {
             "menu_utama": {
@@ -70,26 +106,26 @@ def home():
                     "data": update_manga
                 },
                 "manhwa": {
-                    "title": "📘 Manhwa",
+                    "title": "📚 Manhwa",
                     "data": update_manhwa
                 },
                 "manhua": {
-                    "title": "📗 Manhua",
+                    "title": "📚 Manhua",
                     "data": update_manhua
                 }
             },
             "komik_populer": {
-                "title": "🔥 Komik Populer",
+                "title": "🔥 Populer",
                 "manga": {
                     "title": "📚 Manga",
                     "data": hot_manga
                 },
                 "manhwa": {
-                    "title": "📘 Manhwa",
+                    "title": "📚 Manhwa",
                     "data": hot_manhwa
                 },
                 "manhua": {
-                    "title": "📗 Manhua",
+                    "title": "📚 Manhua",
                     "data": hot_manhua
                 }
             }
