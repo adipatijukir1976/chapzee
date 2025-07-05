@@ -3,6 +3,9 @@ from bs4 import BeautifulSoup
 import re
 import time
 
+# --------------------
+# Simple cache system
+# --------------------
 _cache = {}
 _cache_timeout = 300
 
@@ -22,6 +25,9 @@ def cached_get(url):
         print(f"[ERROR] Failed to fetch URL: {url} | {e}")
         return ""
 
+# --------------------
+# Parse list of manga
+# --------------------
 def parse_bge_list(soup):
     results = []
     for div in soup.select("div.bge"):
@@ -59,18 +65,32 @@ def parse_bge_list(soup):
             continue
     return results
 
+# --------------------
+# Paginated scraping with HTMX has_next_page detection
+# --------------------
 def scrape_paginated_bge(url, page):
     html = cached_get(url)
     if not html:
         return {"page": page, "has_next_page": False, "results": []}
     soup = BeautifulSoup(html, "html.parser")
+
+    # detect HTMX lazy loading next page
+    hx_next = soup.select_one("span[hx-get]")
+    has_next = False
+    if hx_next:
+        next_url = hx_next.get("hx-get", "")
+        if next_url:
+            has_next = True
+
     return {
         "page": page,
-        "has_next_page": soup.select_one("a.next.page-numbers") is not None,
+        "has_next_page": has_next,
         "results": parse_bge_list(soup)
     }
 
-
+# --------------------
+# Genre list scraping
+# --------------------
 def scrape_genre_all():
     html = cached_get("https://api.komiku.org/")
     if not html:
@@ -87,14 +107,21 @@ def scrape_genre_all():
             })
     return results
 
+# --------------------
+# Specific page endpoints
+# --------------------
 def scrape_paginated_bge_with_page(tipe="manga", page=1):
-    return scrape_paginated_bge(f"https://api.komiku.org/manga/page/{page}/?orderby&tipe={tipe}", page)
+    url = f"https://api.komiku.org/manga/page/{page}/?orderby&tipe={tipe}"
+    return scrape_paginated_bge(url, page)
 
 def scrape_hot_bge_with_page(tipe="manga", page=1):
-    return scrape_paginated_bge(f"https://api.komiku.org/other/hot/page/{page}/?orderby=meta_value_num&tipe={tipe}", page)
+    url = f"https://api.komiku.org/other/hot/page/{page}/?orderby=meta_value_num&tipe={tipe}"
+    return scrape_paginated_bge(url, page)
 
 def scrape_rekomendasi_bge_with_page(page=1):
-    return scrape_paginated_bge(f"https://api.komiku.org/manga/page/{page}/?orderby=rand&genre&genre2&statusmanga&tipe", page)
+    url = f"https://api.komiku.org/manga/page/{page}/?orderby=rand&genre&genre2&statusmanga&tipe"
+    return scrape_paginated_bge(url, page)
 
 def scrape_genre_page(genre="action", page=1):
-    return scrape_paginated_bge(f"https://api.komiku.org/genre/{genre}/page/{page}/", page)
+    url = f"https://api.komiku.org/genre/{genre}/page/{page}/"
+    return scrape_paginated_bge(url, page)
